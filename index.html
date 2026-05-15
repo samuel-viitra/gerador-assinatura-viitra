@@ -40,7 +40,6 @@
       padding: 48px 16px 80px;
     }
 
-    /* Background mesh */
     body::before {
       content: '';
       position: fixed;
@@ -59,7 +58,6 @@
       max-width: 640px;
     }
 
-    /* Header */
     .header {
       margin-bottom: 40px;
       text-align: center;
@@ -91,7 +89,6 @@
       font-weight: 300;
     }
 
-    /* Card */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -100,7 +97,6 @@
       box-shadow: 0 24px 64px rgba(0, 0, 0, .35);
     }
 
-    /* Two-column name row */
     .row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -166,7 +162,6 @@
       pointer-events: none;
     }
 
-    /* Button */
     .btn {
       width: 100%;
       margin-top: 8px;
@@ -201,7 +196,6 @@
       flex-shrink: 0;
     }
 
-    /* Result section */
     .result {
       margin-top: 32px;
       display: none;
@@ -285,7 +279,6 @@
       scrollbar-color: var(--border) transparent;
     }
 
-    /* Preview section */
     .preview-wrap {
       margin-top: 28px;
       background: #fff;
@@ -346,6 +339,11 @@
           <label for="lastName">Último Sobrenome</label>
           <input type="text" id="lastName" placeholder="Ex: Pereira" autocomplete="family-name" />
         </div>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="Ex: samuel.pereira@viitra.com" autocomplete="email" />
       </div>
 
       <div class="field">
@@ -429,7 +427,7 @@
 <td style="vertical-align: bottom;"><span style="display: block; background-color: #52e88f;"><img style="display: block; background-color: #52e88f;" src="https://cdn2.hubspot.net/hubfs/53/tools/email-signature-generator/icons/email-icon-2x.png" width="13" /></span></td>
 </tr></tbody></table>
 </td>
-<td style="padding: 0px;"><a style="text-decoration: none; color: #444b56; font-size: 12px;" href="mailto:samuel.pereira@viitra.com"><span>samuel.pereira@viitra.com</span></a></td>
+<td style="padding: 0px;"><a style="text-decoration: none; color: #444b56; font-size: 12px;" href="mailto:{{EMAIL}}"><span>{{EMAIL}}</span></a></td>
 </tr>
 <tr style="vertical-align: middle;">
 <td style="vertical-align: middle;" width="30">
@@ -518,9 +516,10 @@
     function generate() {
       const first = document.getElementById('firstName').value.trim();
       const last = document.getElementById('lastName').value.trim();
+      const email = document.getElementById('email').value.trim();
       const dept = document.getElementById('department').value;
 
-      if (!first || !last || !dept) {
+      if (!first || !last || !email || !dept) {
         shake();
         return;
       }
@@ -528,18 +527,18 @@
       const html = TEMPLATE
         .replace('{{PRIMEIRO_NOME}}', escapeHtml(first))
         .replace('{{ULTIMO_SOBRENOME}}', escapeHtml(last))
-        .replace('{{DEPARTAMENTO}}', escapeHtml(dept));
+        .replace('{{DEPARTAMENTO}}', escapeHtml(dept))
+        .replaceAll('{{EMAIL}}', escapeHtml(email));
 
       document.getElementById('codeBox').textContent = html;
       document.getElementById('preview').innerHTML = html;
 
       const result = document.getElementById('result');
       result.classList.remove('show');
-      void result.offsetWidth; // reflow for re-animation
+      void result.offsetWidth;
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-      // reset copy button
       const cb = document.getElementById('copyBtn');
       cb.classList.remove('copied');
       cb.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar código`;
@@ -572,8 +571,7 @@
       };
       run();
 
-      // highlight empty fields
-      ['firstName', 'lastName', 'department'].forEach(id => {
+      ['firstName', 'lastName', 'email', 'department'].forEach(id => {
         const el = document.getElementById(id);
         if (!el.value.trim()) {
           el.style.borderColor = '#ff6b6b';
@@ -586,7 +584,6 @@
       });
     }
 
-    // Allow Enter key to trigger generation
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter') generate();
     });
