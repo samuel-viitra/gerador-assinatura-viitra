@@ -304,6 +304,74 @@
       margin: 0 auto 32px;
     }
 
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .img-card {
+      position: relative;
+      background: var(--input-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 12px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, box-shadow .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+    }
+
+    .img-card:hover {
+      border-color: rgba(82, 232, 143, .4);
+      background: rgba(82, 232, 143, .03);
+      transform: translateY(-1px);
+    }
+
+    .img-card.selected {
+      border-color: var(--green);
+      background: rgba(82, 232, 143, .06);
+      box-shadow: 0 0 0 3px rgba(82, 232, 143, .12);
+    }
+
+    .img-card img {
+      max-width: 110px;
+      max-height: 44px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .img-card .check {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--input-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s, background .2s;
+    }
+
+    .img-card.selected .check {
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .img-card .check svg {
+      opacity: 0;
+      transition: opacity .15s;
+    }
+
+    .img-card.selected .check svg {
+      opacity: 1;
+    }
+
     @media (max-width: 480px) {
       .row {
         grid-template-columns: 1fr;
@@ -347,16 +415,59 @@
       </div>
 
       <div class="field">
-        <label for="department">Departamento</label>
+        <label for="department">Departamento/Cargo</label>
         <div class="select-wrap">
           <select id="department">
-            <option value="" disabled selected>Selecione seu departamento</option>
+            <option value="" disabled selected>Selecione seu departamento/cargo</option>
             <option>Dep. Administrativo</option>
             <option>Assessoria Pedagógica</option>
             <option>Recursos Humanos</option>
             <option>Tecnologia da Informação</option>
             <option>Dep. Financeiro</option>
+            <option>Diretor Executivo</option>
+            <option>Gerente de Projeto</option>
+            <option>Gerente Administrativo</option>
+            <option>Gerente Financeiro</option>
+            <option>Gerente de Recursos Humanos</option>
           </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Imagens do Rodapé (abaixo da Viitra)</label>
+        <div class="img-grid" id="imgGrid">
+          <div class="img-card" data-src="https://i.ibb.co/svFsW7XM/v-studio.png" data-name="V-Studio"
+            onclick="toggleImg(this)">
+            <span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0d1117"
+                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg></span>
+            <img src="https://i.ibb.co/svFsW7XM/v-studio.png" alt="V-Studio" />
+          </div>
+          <div class="img-card" data-src="https://i.ibb.co/Cs4bb4ZS/vii9.png" data-name="Vii9"
+            onclick="toggleImg(this)">
+            <span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0d1117"
+                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg></span>
+            <img src="https://i.ibb.co/Cs4bb4ZS/vii9.png" alt="VII9" />
+          </div>
+          <div class="img-card" data-src="https://i.ibb.co/DfJ83CKG/inovaula.png" data-name="Inovaula"
+            onclick="toggleImg(this)">
+            <span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0d1117"
+                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg></span>
+            <img src="https://i.ibb.co/DfJ83CKG/inovaula.png" alt="Inovaula" />
+          </div>
+          <div class="img-card" data-src="https://i.ibb.co/zh6BTn4D/redu.png" data-name="Redu"
+            onclick="toggleImg(this)">
+            <span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0d1117"
+                stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg></span>
+            <img src="https://i.ibb.co/zh6BTn4D/redu.png" alt="Redu" />
+          </div>
         </div>
       </div>
 
@@ -371,7 +482,6 @@
         Gerar Assinatura
       </button>
 
-      <!-- Result -->
       <div class="result" id="result">
         <div class="result-label">
           <span>Código HTML</span>
@@ -395,6 +505,7 @@
   </div>
 
   <script>
+    // Foi adicionada a tag {{TEXTO_MARCAS}} substituindo o texto estático antigo
     const TEMPLATE = `<table class="sc-gPEVay eQYmiW" style="vertical-align: -webkit-baseline-middle; font-size: large; font-family: Arial;" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
@@ -405,7 +516,7 @@
 <td style="vertical-align: middle;">
 <h3 class="sc-fBuWsC eeihxG" style="margin: 0px; font-size: 20px; color: #444b56;"><span>{{PRIMEIRO_NOME}}</span><span>&nbsp;</span><span>{{ULTIMO_SOBRENOME}}</span></h3>
 <p class="sc-fMiknA bxZCMx" style="margin: 0px; color: #444b56; font-size: 16px; line-height: 24px;"><span>{{DEPARTAMENTO}}</span></p>
-<p class="sc-dVhcbM fghLuF" style="margin: 0px; font-weight: 500; color: #444b56; font-size: 16px; line-height: 24px;"><span>Viitra Inova&ccedil;&otilde;es | Redu</span></p>
+<p class="sc-dVhcbM fghLuF" style="margin: 0px; font-weight: 500; color: #444b56; font-size: 16px; line-height: 24px;"><span>{{TEXTO_MARCAS}}</span></p>
 </td>
 <td width="30">&nbsp;</td>
 <td class="sc-jhAzac hmXDXQ" style="width: 1px; border-bottom: none; border-left: 1px solid #52e88f;" width="1">&nbsp;</td>
@@ -459,7 +570,7 @@
 <tbody>
 <tr><td height="30">&nbsp;</td></tr>
 <tr><td style="width: 100%; border-bottom: 1px solid #52e88f; border-left: none; display: block;" height="1">&nbsp;</td></tr>
-<tr><td height="15">&nbsp;</td></tr>
+<tr><td height="15" colspan="2">&nbsp;</td></tr>
 </tbody>
 </table>
 </td>
@@ -486,25 +597,9 @@
 </td>
 </tr>
 </tbody>
-<tbody><tr><td height="15">&nbsp;</td></tr></tbody>
+<tbody><tr><td height="15" colspan="2">&nbsp;</td></tr></tbody>
 <tbody>
-<tr>
-<td style="vertical-align: top;"><a href="https://redu.digital"><img style="max-width: 130px; display: inline-block;" src="https://i.ibb.co/zh6BTn4D/redu.png" width="130" /></a></td>
-<td style="text-align: right; vertical-align: top;">
-<table style="vertical-align: -webkit-baseline-middle; font-size: large; font-family: Arial; display: inline-block;" cellspacing="0" cellpadding="0">
-<tbody>
-<tr style="text-align: right;">
-<td><a style="display: inline-block; padding: 0px; background-color: #4eadd6;" href="https://www.instagram.com/redudigital/"><img style="background-color: #4eadd6; max-width: 135px; display: block;" src="https://cdn2.hubspot.net/hubfs/53/tools/email-signature-generator/icons/instagram-icon-2x.png" alt="instagram" height="24" /></a></td>
-<td width="5">&nbsp;</td>
-<td><a style="display: inline-block; padding: 0px; background-color: #4eadd6;" href="https://www.facebook.com/redu_digital"><img style="background-color: #4eadd6; max-width: 135px; display: block;" src="https://cdn2.hubspot.net/hubfs/53/tools/email-signature-generator/icons/facebook-icon-2x.png" alt="facebook" height="24" /></a></td>
-<td width="5">&nbsp;</td>
-<td><a style="display: inline-block; padding: 0px; background-color: #4eadd6;" href="https://www.linkedin.com/company/77039048"><img style="background-color: #4eadd6; max-width: 135px; display: block;" src="https://cdn2.hubspot.net/hubfs/53/tools/email-signature-generator/icons/linkedin-icon-2x.png" alt="linkedin" height="24" /></a></td>
-<td width="5">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
+{{FOOTER_IMAGES}}
 </tbody>
 </table>
 </td>
@@ -513,6 +608,39 @@
 </tbody>
 </table>`;
 
+    /* ── Image selection ── */
+    function toggleImg(card) {
+      card.classList.toggle('selected');
+    }
+
+    function getSelectedImages() {
+      return Array.from(document.querySelectorAll('.img-card.selected')).map(c => c.dataset.src);
+    }
+
+    // Nova função para capturar os nomes das marcas selecionadas
+    function getSelectedNames() {
+      return Array.from(document.querySelectorAll('.img-card.selected')).map(c => c.dataset.name);
+    }
+
+    function buildFooterImagesHtml() {
+      const imgs = getSelectedImages();
+      if (imgs.length === 0) return '';
+      let cells = imgs.map(src =>
+        `<td style="vertical-align: middle; padding-right: 10px;"><img style="max-width: 130px; max-height: 60px; display: inline-block;" src="${src}" /></td>`
+      ).join('\n');
+
+      return `<tr>
+        <td colspan="2">
+          <table cellspacing="0" cellpadding="0">
+            <tbody>
+              <tr>\n${cells}\n</tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>`;
+    }
+
+    /* ── Generate ── */
     function generate() {
       const first = document.getElementById('firstName').value.trim();
       const last = document.getElementById('lastName').value.trim();
@@ -524,11 +652,22 @@
         return;
       }
 
+      // Constrói o texto dinâmico das marcas com base na seleção
+      const selectedNames = getSelectedNames();
+      let textoMarcas = "Viitra Inovações";
+      if (selectedNames.length > 0) {
+        textoMarcas += " | " + selectedNames.join(" | ");
+      }
+
+      const footerImgs = buildFooterImagesHtml();
+
       const html = TEMPLATE
         .replace('{{PRIMEIRO_NOME}}', escapeHtml(first))
         .replace('{{ULTIMO_SOBRENOME}}', escapeHtml(last))
         .replace('{{DEPARTAMENTO}}', escapeHtml(dept))
-        .replaceAll('{{EMAIL}}', escapeHtml(email));
+        .replace('{{TEXTO_MARCAS}}', escapeHtml(textoMarcas)) // Aplica o texto dinâmico no template
+        .replaceAll('{{EMAIL}}', escapeHtml(email))
+        .replace('{{FOOTER_IMAGES}}', footerImgs);
 
       document.getElementById('codeBox').textContent = html;
       document.getElementById('preview').innerHTML = html;
