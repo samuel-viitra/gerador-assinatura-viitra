@@ -420,10 +420,11 @@
           <select id="department">
             <option value="" disabled selected>Selecione seu departamento/cargo</option>
             <option>Dep. Administrativo</option>
+            <option>Dep. Financeiro</option>
+            <option>Dep. Comercial</option>
             <option>Assessoria Pedagógica</option>
             <option>Recursos Humanos</option>
             <option>Tecnologia da Informação</option>
-            <option>Dep. Financeiro</option>
             <option>Diretor Executivo</option>
             <option>Gerente de Projeto</option>
             <option>Gerente Administrativo</option>
@@ -505,7 +506,6 @@
   </div>
 
   <script>
-    // Foi adicionada a tag {{TEXTO_MARCAS}} substituindo o texto estático antigo
     const TEMPLATE = `<table class="sc-gPEVay eQYmiW" style="vertical-align: -webkit-baseline-middle; font-size: large; font-family: Arial;" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
@@ -516,7 +516,7 @@
 <td style="vertical-align: middle;">
 <h3 class="sc-fBuWsC eeihxG" style="margin: 0px; font-size: 20px; color: #444b56;"><span>{{PRIMEIRO_NOME}}</span><span>&nbsp;</span><span>{{ULTIMO_SOBRENOME}}</span></h3>
 <p class="sc-fMiknA bxZCMx" style="margin: 0px; color: #444b56; font-size: 16px; line-height: 24px;"><span>{{DEPARTAMENTO}}</span></p>
-<p class="sc-dVhcbM fghLuF" style="margin: 0px; font-weight: 500; color: #444b56; font-size: 16px; line-height: 24px;"><span>{{TEXTO_MARCAS}}</span></p>
+<p class="sc-dVhcbM fghLuF" style="margin: 0px; font-weight: 500; color: #444b56; font-size: 16px; line-height: 24px;"><span>Viitra Inovações</span></p>
 </td>
 <td width="30">&nbsp;</td>
 <td class="sc-jhAzac hmXDXQ" style="width: 1px; border-bottom: none; border-left: 1px solid #52e88f;" width="1">&nbsp;</td>
@@ -617,11 +617,6 @@
       return Array.from(document.querySelectorAll('.img-card.selected')).map(c => c.dataset.src);
     }
 
-    // Nova função para capturar os nomes das marcas selecionadas
-    function getSelectedNames() {
-      return Array.from(document.querySelectorAll('.img-card.selected')).map(c => c.dataset.name);
-    }
-
     function buildFooterImagesHtml() {
       const imgs = getSelectedImages();
       if (imgs.length === 0) return '';
@@ -652,20 +647,12 @@
         return;
       }
 
-      // Constrói o texto dinâmico das marcas com base na seleção
-      const selectedNames = getSelectedNames();
-      let textoMarcas = "Viitra Inovações";
-      if (selectedNames.length > 0) {
-        textoMarcas += " | " + selectedNames.join(" | ");
-      }
-
       const footerImgs = buildFooterImagesHtml();
 
       const html = TEMPLATE
         .replace('{{PRIMEIRO_NOME}}', escapeHtml(first))
         .replace('{{ULTIMO_SOBRENOME}}', escapeHtml(last))
         .replace('{{DEPARTAMENTO}}', escapeHtml(dept))
-        .replace('{{TEXTO_MARCAS}}', escapeHtml(textoMarcas)) // Aplica o texto dinâmico no template
         .replaceAll('{{EMAIL}}', escapeHtml(email))
         .replace('{{FOOTER_IMAGES}}', footerImgs);
 
